@@ -1,19 +1,19 @@
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Implementation of the PaymentGateway for Stripe.
+ * StripeGateway is an implementation of the PaymentGateway for Stripe.
  */
 public class StripeGateway extends BaseGateway {
 
     /**
-     * Constructs a StripeGateway with the specified API endpoint.
+     * Constructs a StripeGateway with the specified API endpoint and API key.
      *
      * @param apiEndpoint the Stripe API endpoint URL
+     * @param apiKey      the API key for Stripe authentication
      */
-    public StripeGateway(String apiEndpoint) {
-        super(apiEndpoint);
+    public StripeGateway (String apiEndpoint, String apiKey) {
+        super(apiEndpoint, apiKey);
     }
 
     /**
@@ -23,7 +23,7 @@ public class StripeGateway extends BaseGateway {
      * @return a map containing the processing result
      */
     @Override
-    public Map<String, String> processPayment(Map<String, String> paymentDetails) {
+    public Map<String, String> processPayment (Map<String, String> paymentDetails) {
         System.out.println("Processing payment through Stripe at " + apiEndpoint);
         String transactionId = "ST" + new Date().getTime();
         return createResponse("success", transactionId);
@@ -36,7 +36,7 @@ public class StripeGateway extends BaseGateway {
      * @return a map containing the refund result
      */
     @Override
-    public Map<String, String> refundPayment(String transactionId) {
+    public Map<String, String> refundPayment (String transactionId) {
         System.out.println("Processing refund through Stripe for transaction " + transactionId);
         return createResponse("refunded", transactionId);
     }
@@ -48,7 +48,7 @@ public class StripeGateway extends BaseGateway {
      * @return the transaction status as a string
      */
     @Override
-    public String getTransactionStatus(String transactionId) {
+    public String getTransactionStatus (String transactionId) {
         System.out.println("Checking transaction status on Stripe for " + transactionId);
         return "completed";
     }

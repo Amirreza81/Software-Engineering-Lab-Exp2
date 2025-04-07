@@ -1,23 +1,19 @@
-import java.util.Date;
 import java.util.Map;
 
-
-
 /**
- * PaymentProcessor class that processes payments using a PaymentGateway.
- * This class demonstrates polymorphism by allowing any PaymentGateway implementation
- * to be used for processing, refunding, and checking transaction status.
+ * PaymentProcessor handles the payment processing by working with a PaymentGateway.
+ * This demonstrates dependency injection where any PaymentGateway implementation can be injected.
  */
 public class PaymentProcessor {
-    private PaymentGateway gateway;
+    private PaymentGateway paymentGateway;
 
     /**
-     * Constructs a PaymentProcessor with the specified PaymentGateway.
+     * Constructs a PaymentProcessor with the injected PaymentGateway.
      *
-     * @param gateway an implementation of the PaymentGateway interface
+     * @param paymentGateway an implementation of the PaymentGateway interface
      */
-    public PaymentProcessor(PaymentGateway gateway) {
-        this.gateway = gateway;
+    public PaymentProcessor (PaymentGateway paymentGateway) {
+        this.paymentGateway = paymentGateway;
     }
 
     /**
@@ -26,8 +22,8 @@ public class PaymentProcessor {
      * @param paymentDetails a map containing payment details
      * @return a map containing the payment processing result
      */
-    public Map<String, String> processPayment(Map<String, String> paymentDetails) {
-        return gateway.processPayment(paymentDetails);
+    public Map<String, String> processPayment (Map<String, String> paymentDetails) {
+        return paymentGateway.processPayment(paymentDetails);
     }
 
     /**
@@ -36,8 +32,8 @@ public class PaymentProcessor {
      * @param transactionId the id of the transaction to refund
      * @return a map containing the refund result
      */
-    public Map<String, String> refundPayment(String transactionId) {
-        return gateway.refundPayment(transactionId);
+    public Map<String, String> refundPayment (String transactionId) {
+        return paymentGateway.refundPayment(transactionId);
     }
 
     /**
@@ -46,7 +42,7 @@ public class PaymentProcessor {
      * @param transactionId the id of the transaction
      * @return a string representing the transaction status
      */
-    public String getTransactionStatus(String transactionId) {
-        return gateway.getTransactionStatus(transactionId);
+    public String getTransactionStatus (String transactionId) {
+        return paymentGateway.getTransactionStatus(transactionId);
     }
 }
