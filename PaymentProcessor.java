@@ -4,49 +4,49 @@ import java.util.Map;
 
 
 /**
- * Class responsible for processing payments.
- * It coordinates the validation and processing of a Payment instance and logs the transaction.
+ * PaymentProcessor class that processes payments using a PaymentGateway.
+ * This class demonstrates polymorphism by allowing any PaymentGateway implementation
+ * to be used for processing, refunding, and checking transaction status.
  */
 public class PaymentProcessor {
-    private Map<String, String> config;
+    private PaymentGateway gateway;
 
     /**
-     * Constructs a PaymentProcessor with the specified configuration.
+     * Constructs a PaymentProcessor with the specified PaymentGateway.
      *
-     * @param config a map containing API endpoints and other configuration details
+     * @param gateway an implementation of the PaymentGateway interface
      */
-    public PaymentProcessor(Map<String, String> config) {
-        this.config = config;
+    public PaymentProcessor(PaymentGateway gateway) {
+        this.gateway = gateway;
     }
 
     /**
-     * Processes the given payment by validating and then processing it.
-     * Logs the transaction after processing.
+     * Processes a payment using the configured payment gateway.
      *
-     * @param payment the Payment instance to be processed
-     * @return a map containing the result of the payment processing
+     * @param paymentDetails a map containing payment details
+     * @return a map containing the payment processing result
      */
-    public Map<String, String> process(Payment payment) {
-        // Validate the payment details
-        if (!payment.validatePayment()) {
-            return Map.of("status", "failed", "message", "Validation error");
-        }
-        // Process the payment using the specific payment method's implementation
-        Map<String, String> result = payment.processPayment(config);
-        // Log the transaction
-        logTransaction(payment, result);
-        return result;
+    public Map<String, String> processPayment(Map<String, String> paymentDetails) {
+        return gateway.processPayment(paymentDetails);
     }
 
     /**
-     * Logs the details of the processed payment.
+     * Refunds a payment using the configured payment gateway.
      *
-     * @param payment the Payment instance that was processed
-     * @param result  the result returned by the payment processing
+     * @param transactionId the id of the transaction to refund
+     * @return a map containing the refund result
      */
-    private void logTransaction(Payment payment, Map<String, String> result) {
-        String logEntry = String.format("%s - Payment of %.2f %s for %s: %s",
-                payment.timestamp, payment.amount, payment.currency, payment.customerInfo.get("name"), result);
-        System.out.println("LOG: " + logEntry);
+    public Map<String, String> refundPayment(String transactionId) {
+        return gateway.refundPayment(transactionId);
+    }
+
+    /**
+     * Gets the transaction status from the configured payment gateway.
+     *
+     * @param transactionId the id of the transaction
+     * @return a string representing the transaction status
+     */
+    public String getTransactionStatus(String transactionId) {
+        return gateway.getTransactionStatus(transactionId);
     }
 }
